@@ -5,4 +5,4 @@ log/
 .vscode/
 abdullah.code-workspace
 
-src/*/*/test/
+src/*/test/
