@@ -1,0 +1,5 @@
+ros2 interface list | grep x3cator_msgs
+
+ros2 interface show x3cator_msgs/msg/*
+
+ros2 interface show x3cator_msgs/srv/*
