@@ -5,4 +5,9 @@ log/
 .vscode/
 abdullah.code-workspace
 
-src/*/test/
+src/x3cator_hardware/gas_sensor/test/*
+src/x3cator_hardware/imu_driver/test/*
+src/x3cator_hardware/intel_realsense/test/*
+src/x3cator_hardware/motor_driver/test/*
+src/x3cator_hardware/x3cator_model/test/*
+
