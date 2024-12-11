@@ -1,2 +1,3 @@
 # WheelVelocity.msg
-float32 wheel_velocity
+float32 right_velocity
+float32 left_velocity

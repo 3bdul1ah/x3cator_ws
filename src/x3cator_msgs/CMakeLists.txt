@@ -23,8 +23,8 @@ find_package(std_msgs REQUIRED)
 # Generate messages and services
 rosidl_generate_interfaces(${PROJECT_NAME}
 ##########################################
-  "msg/GasSensorData.msg" 
-  "srv/GetGasSensorData.srv" 
+  "msg/FourGasSensor.msg" 
+  "srv/FourGasSensor.srv" 
 
   "msg/WheelVelocity.msg" 
   "srv/WheelVelocity.srv" 
