@@ -7,7 +7,7 @@ abdullah.code-workspace
 
 src/*/test/
 
-src/x3cator_hardware/gas_sensor/test/
+src/x3cator_hardware/gas_sensor/test/*.py
 src/x3cator_hardware/imu_driver/test/
 src/x3cator_hardware/intel_realsense/test/
 src/x3cator_hardware/motor_driver/test/
