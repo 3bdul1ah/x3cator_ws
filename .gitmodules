@@ -1,0 +1,20 @@
+[submodule "src/x3cator_hardware/lidar_driver/rslidar_sdk"]
+	path = src/x3cator_hardware/lidar_driver/rslidar_sdk
+	url = https://github.com/RoboSense-LiDAR/rslidar_sdk.git
+	branch = main
+
+[submodule "src/x3cator_hardware/lidar_driver/rslidar_msg"]
+	path = src/x3cator_hardware/lidar_driver/rslidar_msg
+	url = https://github.com/RoboSense-LiDAR/rslidar_msg.git
+	branch = master
+
+
+[submodule "src/x3cator_hardware/x3cator_hardware/intel_realsense/depthimage_to_laserscan"]
+	path = src/x3cator_hardware/intel_realsense/depthimage_to_laserscan
+	url = https://github.com/ros-perception/depthimage_to_laserscan.git
+	branch = foxy-devel
+
+[submodule "src/x3cator_mapping/FAST_LIO_SLAM_ros2"]
+	path = src/x3cator_mapping/FAST_LIO_SLAM_ros2
+	url = https://github.com/Taeyoung96/FAST_LIO_ROS2.git
+	branch = ros2
