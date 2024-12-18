@@ -22,7 +22,8 @@ setup(
         'console_scripts': [
             'motor_driver_canopen = motor_driver.motor_driver_canopen:main',
             'odometry = motor_driver.odometry:main', 
-            'robot_tf_publisher = motor_driver.robot_tf_publisher:main',
+            'x3cator_tf = motor_driver.x3cator_tf:main', 
+
         ],
     },
 )

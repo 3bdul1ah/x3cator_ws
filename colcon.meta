@@ -1,10 +1,10 @@
-{
-    "names": {
-        "rslidar_msg": {
-            "path": "src/x3cator_hardware/lidar_driver/rslidar_msg"
-        },
-        "rslidar_sdk": {
-            "path": "src/x3cator_hardware/lidar_driver/rslidar_sdk"
+    {
+        "names": {
+            "rslidar_msg": {
+                "path": "src/x3cator_hardware/lidar_driver/rslidar_msg"
+            },
+            "rslidar_sdk": {
+                "path": "src/x3cator_hardware/lidar_driver/rslidar_sdk"
+            }
         }
     }
-}

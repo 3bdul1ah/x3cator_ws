@@ -37,7 +37,7 @@ class RobotTFPublisher(Node):
 
         lidar_trans = TransformStamped()
         lidar_trans.header.frame_id = "base_link"
-        lidar_trans.child_frame_id = "velodyne"  
+        lidar_trans.child_frame_id = "lidar_link"  
         lidar_trans.transform.translation.x = 0.437
         lidar_trans.transform.translation.y = 0.0
         lidar_trans.transform.translation.z = 0.429
@@ -47,6 +47,19 @@ class RobotTFPublisher(Node):
         lidar_trans.transform.rotation.z = q[2]
         lidar_trans.transform.rotation.w = q[3]
 
+        cam_trans = TransformStamped()
+        cam_trans.header.frame_id = "base_link"
+        cam_trans.child_frame_id = "camera_link"  
+        cam_trans.transform.translation.x = 0.4
+        cam_trans.transform.translation.y = 0.0
+        cam_trans.transform.translation.z = 0.3
+        q = quaternion_from_euler(0, 0, 0)
+        cam_trans.transform.rotation.x = q[0]
+        cam_trans.transform.rotation.y = q[1]
+        cam_trans.transform.rotation.z = q[2]
+        cam_trans.transform.rotation.w = q[3]
+
+        
         # rtk1_trans = TransformStamped()
         # rtk1_trans.header.frame_id = "base_link"
         # rtk1_trans.child_frame_id = "gps"
@@ -71,19 +84,20 @@ class RobotTFPublisher(Node):
         # rtk2_trans.transform.rotation.z = q[2]
         # rtk2_trans.transform.rotation.w = q[3]
 
-        laser_trans = TransformStamped()
-        laser_trans.header.frame_id = "base_link"
-        laser_trans.child_frame_id = "laser_link"
-        laser_trans.transform.translation.x = 0.437
-        laser_trans.transform.translation.y = 0.0
-        laser_trans.transform.translation.z = 0.429
-        q = quaternion_from_euler(0, 0, 0)
-        laser_trans.transform.rotation.x = q[0]
-        laser_trans.transform.rotation.y = q[1]
-        laser_trans.transform.rotation.z = q[2]
-        laser_trans.transform.rotation.w = q[3]
+        # laser_trans = TransformStamped()
+        # laser_trans.header.frame_id = "base_link"
+        # laser_trans.child_frame_id = "laser_link"
+        # laser_trans.transform.translation.x = 0.437
+        # laser_trans.transform.translation.y = 0.0
+        # laser_trans.transform.translation.z = 0.429
+        # q = quaternion_from_euler(0, 0, 0)
+        # laser_trans.transform.rotation.x = q[0]
+        # laser_trans.transform.rotation.y = q[1]
+        # laser_trans.transform.rotation.z = q[2]
+        # laser_trans.transform.rotation.w = q[3]
 
-        self.br.sendTransform([base_trans, imu_trans, lidar_trans, laser_trans])
+
+        self.br.sendTransform([base_trans, imu_trans, lidar_trans, cam_trans])
 
 def main(args=None):
     rclpy.init(args=args)
