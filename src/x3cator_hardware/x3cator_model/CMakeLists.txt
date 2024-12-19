@@ -22,12 +22,14 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY config launch maps meshes models params rviz src urdf worlds
+  DIRECTORY launch meshes rviz urdf
   DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
+  find_package(gazebo_ros REQUIRED)
+  find_package(gazebo_plugins REQUIRED)
   # the following line skips the linter which checks for copyrights
   # uncomment the line when a copyright and license is not present in all source files
   #set(ament_cmake_copyright_FOUND TRUE)

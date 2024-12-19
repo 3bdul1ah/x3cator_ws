@@ -1,37 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<robot name="x3cator_model" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- Gazebo plugin for differential drive -->
-  <gazebo>
-    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
-      <update_rate>50</update_rate>
-      <left_joint>left_wheel_joint</left_joint>
-      <right_joint>right_wheel_joint</right_joint>
-      <wheel_separation>0.8</wheel_separation>
-      <wheel_diameter>0.2</wheel_diameter>
-      <max_wheel_torque>5</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
-      <command_topic>cmd_vel</command_topic>
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>true</publish_wheel_tf>
-      <odometry_topic>odom</odometry_topic>
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_link</robot_base_frame>
-    </plugin>
-  </gazebo>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! -->
+<robot name="x3cator_model">
 
   <!-- Base Link -->
   <link name="base_link">
+
     <inertial>
       <origin xyz="-0.0068129428236643 0.000911857513887752 -0.210457840549364" rpy="0 0 0" />
-      <mass value="20.0"/>
+      <mass value="114.248" />
       <inertia
-        ixx="1.34"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="1.34"
-        iyz="0.0"
-        izz="1.34"/>
+        ixx="1.34359757026572"
+        ixy="-0.00102457104712637"
+        ixz="-0.237945102 978319"
+        iyy="7.19905309552309"
+        iyz="-0.00341585895376481"
+        izz="6.76152658394631" />
     </inertial>
 
     <visual>
@@ -39,7 +22,7 @@
       <geometry>
         <mesh filename="package://x3cator_model/meshes/base_link.STL" />
       </geometry>
-      <material name="base_material">
+      <material name="">
         <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
       </material>
     </visual>
@@ -47,111 +30,10 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <box size="0.5 0.3 0.2"/> 
+        <mesh filename="package://x3cator_model/meshes/base_link.STL" />
       </geometry>
     </collision>
+
   </link>
 
-  <!-- Left Wheel -->
-  <link name="left_wheel">
-    <inertial>
-      <origin xyz="0 0 0" rpy="1.57 0 0" />
-      <mass value="2.0"/>  
-      <inertia 
-        ixx="0.02" ixy="0" ixz="0"
-        iyy="0.02" iyz="0"
-        izz="0.02" />
-    </inertial>
-    
-    <visual>
-      <origin xyz="0 0 0" rpy="1.57 0 0"/>
-      <geometry>
-        <cylinder radius="0.1" length="0.05"/>
-      </geometry>
-      <material name="black">
-        <color rgba="0 0 0 1"/>
-      </material>
-    </visual>
-    
-    <collision>
-      <origin xyz="0 0 0" rpy="1.57 0 0"/>
-      <geometry>
-        <cylinder radius="0.1" length="0.05"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <!-- Right Wheel -->
-  <link name="right_wheel">
-    <inertial>
-      <origin xyz="0 0 0" rpy="1.57 0 0" />
-      <mass value="2.0"/>  
-      <inertia 
-        ixx="0.02" ixy="0" ixz="0"
-        iyy="0.02" iyz="0"
-        izz="0.02" />
-    </inertial>
-    
-    <visual>
-      <origin xyz="0 0 0" rpy="1.57 0 0"/>
-      <geometry>
-        <cylinder radius="0.1" length="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    
-    <collision>
-      <origin xyz="0 0 0" rpy="1.57 0 0"/>
-      <geometry>
-        <cylinder radius="0.1" length="0.05"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <!-- Left Wheel Joint -->
-  <joint name="left_wheel_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="left_wheel"/>
-    <origin xyz="0.0 0.4 -0.212" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.1"/>  
-  </joint>
-
-  <!-- Right Wheel Joint -->
-  <joint name="right_wheel_joint" type="continuous">
-    <parent link="base_link"/>
-    <child link="right_wheel"/>
-    <origin xyz="0.0 -0.4 -0.212" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.1"/> 
-  </joint>
-
-  <!-- Gazebo materials and physics properties -->
-  <gazebo reference="base_link">
-    <material>Gazebo/Gray</material>
-    <gravity>true</gravity>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-
-  <gazebo reference="left_wheel">
-    <material>Gazebo/Black</material>
-    <mu1>0.8</mu1>
-    <mu2>0.8</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-
-  <gazebo reference="right_wheel">
-    <material>Gazebo/Black</material>
-    <mu1>0.8</mu1>
-    <mu2>0.8</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <selfCollide>true</selfCollide>
-  </gazebo>
 </robot>

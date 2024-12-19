@@ -11,7 +11,7 @@ def generate_launch_description():
     pkg_share = FindPackageShare(package='x3cator_model').find('x3cator_model')
  
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/rviz_basic_settings.rviz')
-    default_urdf_model_path = os.path.join(pkg_share, 'urdf/x3cator_model.urdf')
+    default_urdf_model_path = os.path.join(pkg_share, 'urdf/x3cator_model_gazebo.urdf')
     
     # Gazebo launch file path
     gazebo_launch_path = PathJoinSubstitution([

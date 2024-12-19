@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="x3cator_model" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Gazebo plugin for differential drive -->
+  <gazebo>
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <update_rate>50</update_rate>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.8</wheel_separation>
+      <wheel_diameter>0.2</wheel_diameter>
+      <max_wheel_torque>5</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <command_topic>cmd_vel</command_topic>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+    </plugin>
+  </gazebo>
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.0068129428236643 0.000911857513887752 -0.210457840549364" rpy="0 0 0" />
+      <mass value="20.0"/>
+      <inertia
+        ixx="1.34"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="1.34"
+        iyz="0.0"
+        izz="1.34"/>
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find x3cator_model)/meshes/robot.stl"
+        meshscale="1 1 1" />
+      </geometry>
+      <material name="base_material">
+        <color rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find x3cator_model)/meshes/robot.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Left Wheel -->
+  <link name="left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <mass value="2.0"/>  
+      <inertia 
+        ixx="0.02" ixy="0" ixz="0"
+        iyy="0.02" iyz="0"
+        izz="0.02" />
+    </inertial>
+    
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Right Wheel -->
+  <link name="right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <mass value="2.0"/>  
+      <inertia 
+        ixx="0.02" ixy="0" ixz="0"
+        iyy="0.02" iyz="0"
+        izz="0.02" />
+    </inertial>
+    
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Left Wheel Joint -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="0.0 0.35 -0.56" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.1" friction="0.1"/>  
+  </joint>
+
+  <!-- Right Wheel Joint -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0.0 -0.35 -0.56" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.1" friction="0.1"/> 
+  </joint>
+
+  <!-- Gazebo materials and physics properties -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Gray</material>
+    <gravity>true</gravity>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+
+  <gazebo reference="left_wheel">
+    <material>Gazebo/Black</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+
+  <gazebo reference="right_wheel">
+    <material>Gazebo/Black</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+
+<!-- LiDAR Link -->
+<link name="lidar_link">
+    <inertial>
+        <mass value="0.1"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+        <geometry>
+            <cylinder radius="0.03" length="0.05"/>
+        </geometry>
+        <material name="black"/>
+    </visual>
+    <collision>
+        <geometry>
+            <cylinder radius="0.03" length="0.05"/>
+        </geometry>
+    </collision>
+</link>
+
+<joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0.437 0 0.429" rpy="0 0 0"/>
+</joint>
+
+<gazebo reference="lidar_link">
+    <sensor type="gpu_ray" name="velodyne_lidar">
+        <always_on>true</always_on>
+        <update_rate>10</update_rate>
+        <visualize>true</visualize>
+        <ray>
+            <scan>
+                <horizontal>
+                    <samples>1875</samples>
+                    <resolution>1</resolution>
+                    <min_angle>-3.14159265359</min_angle>
+                    <max_angle>3.14159265359</max_angle>
+                </horizontal>
+                <vertical>
+                    <samples>16</samples>
+                    <resolution>1</resolution>
+                    <min_angle>-0.261799</min_angle>
+                    <max_angle>0.261799</max_angle>
+                </vertical>
+            </scan>
+            <range>
+                <min>0.3</min>
+                <max>16.0</max>
+                <resolution>0.001</resolution>
+            </range>
+        </ray>
+        <plugin name="velodyne_plugin" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+                <namespace>/</namespace>
+                <remapping>~/out:=velodyne_points</remapping>
+            </ros>
+            <output_type>sensor_msgs/PointCloud2</output_type>
+            <frame_name>lidar_link</frame_name>
+        </plugin>
+    </sensor>
+</gazebo>
+
+<!-- Camera Link -->
+<link name="camera_link">
+    <inertial>
+        <mass value="0.1"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+        <geometry>
+            <box size="0.025 0.09 0.025"/>
+        </geometry>
+        <material name="black"/>
+    </visual>
+    <collision>
+        <geometry>
+            <box size="0.025 0.09 0.025"/>
+        </geometry>
+    </collision>
+</link>
+
+<joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.53 0.0 0.13" rpy="0 0 0"/>
+</joint>
+
+<gazebo reference="camera_link">
+    <sensor name="realsense_d435" type="depth">
+        <always_on>true</always_on>
+        <update_rate>30.0</update_rate>
+        <camera>
+            <horizontal_fov>1.0472</horizontal_fov>
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>B8G8R8</format>
+            </image>
+            <clip>
+                <near>0.01</near>
+                <far>300</far>
+            </clip>
+        </camera>
+        <plugin name="realsense_plugin" filename="libgazebo_ros_camera.so">
+            <ros>
+                <namespace>/camera</namespace>
+                <remapping>image_raw:=color/image_raw</remapping>
+                <remapping>camera_info:=color/camera_info</remapping>
+                <remapping>points:=depth/points</remapping>
+            </ros>
+            <camera_name>d435</camera_name>
+            <frame_name>camera_link</frame_name>
+            <hack_baseline>0.07</hack_baseline>
+            <min_depth>0.1</min_depth>
+            <max_depth>10.0</max_depth>
+        </plugin>
+    </sensor>
+</gazebo>
+  
+</robot>
