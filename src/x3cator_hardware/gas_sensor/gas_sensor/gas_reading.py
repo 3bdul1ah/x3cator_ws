@@ -17,7 +17,7 @@ class FourGasSensor:
     def __init__(self):
         try:
             self.sensor = serial.Serial(
-                port='/dev/ttyUSB1',
+                port='/dev/ttyGasSensor',   # Update this path if needed
                 baudrate=9600,
                 bytesize=serial.EIGHTBITS,
                 parity=serial.PARITY_NONE,
@@ -26,12 +26,12 @@ class FourGasSensor:
             )
         except serial.SerialException as e:
             if 'Permission denied' in str(e):
-                print("Permission denied accessing /dev/ttyUSB*.")
-                print("Please run with sudo.")
+                print("Permission denied accessing /dev/ttyUSB*. Please run with sudo.")
             raise
 
     def read_sensor(self) -> GasSensorData:
         try:
+            # Wait for header bytes
             while self.sensor.read(1) != b'\xff':
                 continue
             while self.sensor.read(1) != b'\x86':
@@ -39,7 +39,6 @@ class FourGasSensor:
 
             inBytes = [0xFF, 0x86]
             inBytes.extend(self.sensor.read(9))
-
             checksumByte = inBytes.pop()
             checksum = ctypes.c_ubyte(~((sum(inBytes)) % 256)).value
 
@@ -49,8 +48,13 @@ class FourGasSensor:
                 O2 = int.from_bytes([inBytes[6], inBytes[7]], 'big', signed=False) * 0.1
                 CH4 = int.from_bytes([inBytes[8], inBytes[9]], 'big', signed=False) * 1.00
 
-                CO = max(0, CO)
-                H2S = max(0, H2S)
+                # Ensure these values are floats even when zero
+                CO = max(0.0, CO)
+                H2S = max(0.0, H2S)
+                # Optionally, you can also clamp O2 and CH4 if needed:
+                # O2 = max(0.0, O2)
+                # CH4 = CH4 - 100.0  is already float
+
                 CH4 = CH4 - 100.0
 
                 return GasSensorData(
@@ -68,7 +72,6 @@ class FourGasSensor:
             raise
 
     def close(self):
-        """Close the serial connection."""
         if self.sensor.is_open:
             self.sensor.close()
 
@@ -76,7 +79,6 @@ def main():
     try:
         sensor = FourGasSensor()
         print("Four gas sensor started")
-
         while True:
             try:
                 data = sensor.read_sensor()
@@ -84,16 +86,13 @@ def main():
                 print(f"CO: {data.CO:.2f} ppm, H2S: {data.H2S:.2f} ppm, "
                       f"O2: {data.O2:.2f} %, CH4: {data.CH4:.2f} %LEL")
                 time.sleep(0.2)
-
             except KeyboardInterrupt:
                 print("\nStopping sensor readings...")
                 break
-
             except Exception as e:
                 print(f"Error: {e}")
                 time.sleep(1)
                 continue
-
     finally:
         if 'sensor' in locals():
             sensor.close()

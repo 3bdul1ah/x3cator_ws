@@ -5,6 +5,10 @@
             },
             "rslidar_sdk": {
                 "path": "src/x3cator_hardware/lidar_driver/rslidar_sdk"
+            },
+            "rs_to_velodyne": {
+                "path": "src/x3cator_hardware/lidar_driver/rs_to_velodyne"
+
             }
         }
     }
