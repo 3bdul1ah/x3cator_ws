@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X3Cator Web Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.9.0/nipplejs.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --dark-bg: #1a1a1a;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 i {
+            margin-right: 10px;
+        }
+
+        .connection-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .connection-form input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .connection-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 15px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .joystick-container {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #f5f5f5, #e0e0e0);
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 5px solid #ddd;
+        }
+
+        .image-view {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .image-view img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .position-display {
+            width: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background-color: #e9e9e9;
+        }
+
+        .stat-item h4 {
+            margin: 0 0 5px 0;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .stat-item p {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .connection-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background-color: var(--danger-color);
+        }
+
+        .connection-status.connected {
+            background-color: var(--success-color);
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+            margin-right: 5px;
+        }
+
+        .status-dot.connected {
+            background-color: var(--success-color);
+        }
+
+        .camera-placeholder {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #888;
+        }
+
+        .camera-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .controls-help {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .dark-mode {
+            --light-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+        }
+
+        .dark-mode .stat-item {
+            background-color: #2a2a2a;
+        }
+
+        .dark-mode .stat-item h4 {
+            color: #bbb;
+        }
+
+        .dark-mode .stat-item:hover {
+            background-color: #333;
+        }
+
+        .dark-mode .connection-form input {
+            background-color: #2a2a2a;
+            color: white;
+            border-color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .connection-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> X3Cator Web Dashboard</h1>
+            <div class="connection-status" id="connection-indicator">
+                <span class="status-dot"></span> Disconnected
+            </div>
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="connection-form">
+            <input type="text" id="rosbridge-address" placeholder="ws://localhost:9090" value="ws://localhost:9090">
+            <button class="btn btn-primary" id="connect-button" onclick="connectToROS()">
+                <i class="fas fa-plug"></i> Connect
+            </button>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-gamepad"></i> Control</span>
+                </div>
+                <div class="card-body">
+                    <div class="joystick-container" id="joystick"></div>
+                    <div class="controls-help">
+                        <p>Drag to control robot movement</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-camera"></i> Camera Feed</span>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <div class="image-view" id="camera-container">
+                        <div class="camera-placeholder" id="camera-placeholder">
+                            <i class="fas fa-video-slash"></i>
+                            <p>No camera feed available</p>
+                        </div>
+                        <img id="camera-feed" style="display: none;" alt="Camera Feed">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="fas fa-location-dot"></i> Position & Status</span>
+                </div>
+                <div class="card-body">
+                    <div class="position-display">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <h4>X Position</h4>
+                                <p id="position-x">0.00</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Y Position</h4>
+                                <p id="position-y">0.00</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Linear Velocity</h4>
+                                <p id="linear-vel">0.00 m/s</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Angular Velocity</h4>
+                                <p id="angular-vel">0.00 rad/s</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ros;
+        let cmdVelTopic;
+        let joystick;
+        let connected = false;
+
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        function updateConnectionUI(isConnected) {
+            const indicator = document.getElementById('connection-indicator');
+            const statusDot = indicator.querySelector('.status-dot');
+            const connectButton = document.getElementById('connect-button');
+            
+            if (isConnected) {
+                indicator.classList.add('connected');
+                statusDot.classList.add('connected');
+                indicator.innerHTML = '<span class="status-dot connected"></span> Connected';
+                
+                connectButton.innerHTML = '<i class="fas fa-times"></i> Disconnect';
+                connectButton.onclick = disconnectFromROS;
+            } else {
+                indicator.classList.remove('connected');
+                statusDot.classList.remove('connected');
+                indicator.innerHTML = '<span class="status-dot"></span> Disconnected';
+                
+                connectButton.innerHTML = '<i class="fas fa-plug"></i> Connect';
+                connectButton.onclick = connectToROS;
+            }
+        }
+
+        function showConnecting() {
+            const connectButton = document.getElementById('connect-button');
+            connectButton.innerHTML = '<div class="spinner"></div> Connecting...';
+            connectButton.disabled = true;
+        }
+
+        function connectToROS() {
+            showConnecting();
+            const rosbridgeAddress = document.getElementById('rosbridge-address').value;
+            
+            try {
+                ros = new ROSLIB.Ros({
+                    url: rosbridgeAddress
+                });
+
+                ros.on('connection', function () {
+                    console.log('Connected to rosbridge server.');
+                    connected = true;
+                    updateConnectionUI(true);
+                    setupTopics();
+                    document.getElementById('connect-button').disabled = false;
+                });
+
+                ros.on('error', function (error) {
+                    console.error('Error connecting to rosbridge server:', error);
+                    connected = false;
+                    updateConnectionUI(false);
+                    
+                    // Show error notification
+                    alert('Failed to connect: ' + error.toString());
+                    document.getElementById('connect-button').disabled = false;
+                });
+
+                ros.on('close', function () {
+                    console.log('Connection to rosbridge server closed.');
+                    connected = false;
+                    updateConnectionUI(false);
+                    document.getElementById('connect-button').disabled = false;
+                });
+            } catch (e) {
+                console.error('Exception when connecting:', e);
+                alert('Connection error: ' + e.message);
+                updateConnectionUI(false);
+                document.getElementById('connect-button').disabled = false;
+            }
+        }
+
+        function disconnectFromROS() {
+            if (ros) {
+                try {
+                    ros.close();
+                } catch (e) {
+                    console.error('Error closing connection:', e);
+                }
+                connected = false;
+                updateConnectionUI(false);
+                
+                // Reset displayed values
+                document.getElementById('position-x').textContent = '0.00';
+                document.getElementById('position-y').textContent = '0.00';
+                document.getElementById('linear-vel').textContent = '0.00 m/s';
+                document.getElementById('angular-vel').textContent = '0.00 rad/s';
+                
+                // Hide camera feed
+                document.getElementById('camera-feed').style.display = 'none';
+                document.getElementById('camera-placeholder').style.display = 'flex';
+                
+                // If joystick exists, destroy it
+                if (joystick) {
+                    joystick.destroy();
+                    joystick = null;
+                }
+            }
+        }
+
+        function setupTopics() {
+            try {
+                // Set up cmd_vel topic
+                cmdVelTopic = new ROSLIB.Topic({
+                    ros: ros,
+                    name: '/cmd_vel',
+                    messageType: 'geometry_msgs/Twist'
+                });
+
+                // Set up camera topic
+                const imageTopic = new ROSLIB.Topic({
+                    ros: ros,
+                    name: '/camera/image_raw/compressed',
+                    messageType: 'sensor_msgs/CompressedImage'
+                });
+
+                imageTopic.subscribe(function (message) {
+                    try {
+                        const cameraFeed = document.getElementById('camera-feed');
+                        cameraFeed.src = "data:image/jpeg;base64," + message.data;
+                        cameraFeed.style.display = 'block';
+                        document.getElementById('camera-placeholder').style.display = 'none';
+                    } catch (e) {
+                        console.error('Error displaying camera feed:', e);
+                    }
+                });
+
+                // Set up odometry topic
+                const odomTopic = new ROSLIB.Topic({
+                    ros: ros,
+                    name: '/odom',
+                    messageType: 'nav_msgs/Odometry'
+                });
+
+                odomTopic.subscribe(function (message) {
+                    try {
+                        document.getElementById('position-x').textContent = message.pose.pose.position.x.toFixed(2);
+                        document.getElementById('position-y').textContent = message.pose.pose.position.y.toFixed(2);
+                        
+                        // Extract velocities
+                        const linearVel = message.twist.twist.linear.x;
+                        const angularVel = message.twist.twist.angular.z;
+                        
+                        document.getElementById('linear-vel').textContent = linearVel.toFixed(2) + ' m/s';
+                        document.getElementById('angular-vel').textContent = angularVel.toFixed(2) + ' rad/s';
+                    } catch (e) {
+                        console.error('Error updating position data:', e);
+                    }
+                });
+
+                // Set up joystick
+                setupJoystick();
+            } catch (e) {
+                console.error('Error setting up topics:', e);
+                alert('Error setting up ROS topics: ' + e.message);
+            }
+        }
+
+        function setupJoystick() {
+            try {
+                // Clear the joystick container first
+                const joystickContainer = document.getElementById('joystick');
+                joystickContainer.innerHTML = '';
+                
+                if (joystick) {
+                    joystick.destroy();
+                }
+                
+                const options = {
+                    zone: joystickContainer,
+                    mode: 'static',
+                    position: {left: '50%', top: '50%'},
+                    color: '#3498db',
+                    size: 150
+                };
+
+                joystick = nipplejs.create(options);
+
+                joystick.on('move', function (evt, data) {
+                    try {
+                        if (!cmdVelTopic) return;
+                        
+                        const maxSpeed = 1.0; // m/s
+                        const maxTurn = 1.0; // rad/s
+
+                        const linear = Math.sin(data.angle.radian) * maxSpeed * data.distance / 75;
+                        const angular = -Math.cos(data.angle.radian) * maxTurn * data.distance / 75;
+
+                        // Update display immediately for better user feedback
+                        document.getElementById('linear-vel').textContent = linear.toFixed(2) + ' m/s';
+                        document.getElementById('angular-vel').textContent = angular.toFixed(2) + ' rad/s';
+
+                        const twist = new ROSLIB.Message({
+                            linear: {x: linear, y: 0, z: 0},
+                            angular: {x: 0, y: 0, z: angular}
+                        });
+
+                        cmdVelTopic.publish(twist);
+                    } catch (e) {
+                        console.error('Error in joystick move:', e);
+                    }
+                });
+
+                joystick.on('end', function () {
+                    try {
+                        if (!cmdVelTopic) return;
+                        
+                        // Update display immediately
+                        document.getElementById('linear-vel').textContent = '0.00 m/s';
+                        document.getElementById('angular-vel').textContent = '0.00 rad/s';
+
+                        const twist = new ROSLIB.Message({
+                            linear: {x: 0, y: 0, z: 0},
+                            angular: {x: 0, y: 0, z: 0}
+                        });
+
+                        cmdVelTopic.publish(twist);
+                    } catch (e) {
+                        console.error('Error in joystick end:', e);
+                    }
+                });
+                
+                console.log('Joystick setup complete');
+            } catch (e) {
+                console.error('Error setting up joystick:', e);
+                alert('Error setting up joystick: ' + e.message);
+            }
+        }
+
+        // Initialize UI
+        updateConnectionUI(false);
+        
+        // Make sure joystick is initialized
+        window.addEventListener('load', function() {
+            if (connected) {
+                setupJoystick();
+            }
+        });
+    </script>
+</body>
+
+</html>
