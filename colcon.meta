@@ -1,14 +1,28 @@
-    {
-        "names": {
-            "rslidar_msg": {
-                "path": "src/x3cator_hardware/lidar_driver/rslidar_msg"
-            },
-            "rslidar_sdk": {
-                "path": "src/x3cator_hardware/lidar_driver/rslidar_sdk"
-            },
-            "rs_to_velodyne": {
-                "path": "src/x3cator_hardware/lidar_driver/rs_to_velodyne"
-
-            }
+{
+    "names": {
+        "rslidar_msg": {
+            "path": "src/x3cator_hardware/lidar_driver/rslidar_msg"
+        },
+        "rslidar_sdk": {
+            "path": "src/x3cator_hardware/lidar_driver/rslidar_sdk"
+        },
+        "rs_to_velodyne": {
+            "path": "src/x3cator_hardware/lidar_driver/rs_to_velodyne"
+        },
+        "ros2-web-bridge": {
+            "path": "src/x3cator_webpage/rosbridge_suite"
+        },
+        "tf2_web_republisher_py": {
+            "path": "src/x3cator_webpage/tf2_web_republisher"
+        },
+        "handsfree_ros2_imu": {
+            "path": "src/x3cator_hardware/imu_driver/handsfree_ros2_imu"
+        },
+        "LIO-SAM": {
+            "path": "src/x3cator_mapping/LIO-SAM"
+        },
+        "mapconversion": {
+            "path": "src/x3cator_mapping/Map-Conversion-3D-Voxel-Map-to-2D-Occupancy-Map/mapconversion"
         }
     }
+}
